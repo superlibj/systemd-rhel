@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <stddef.h>
 #include <sys/epoll.h>
+#include <>
 
 #include "systemd/sd-messages.h"
 #include "socket-util.h"
@@ -386,6 +387,11 @@ int server_open_syslog_socket(Server *s) {
                         .un.sun_family = AF_UNIX,
                         .un.sun_path = "/run/systemd/journal/dev-log",
                 };
+                struct stat statbuf;
+
+                r = stat("/dev/log", &statbuf);
+                if (!r && S_ISSOCK(statbuf.st_st_mode))
+                        sa.un.sun_path = "/dev/log";
 
                 s->syslog_fd = socket(AF_UNIX, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0);
                 if (s->syslog_fd < 0)
