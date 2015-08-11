@@ -92,7 +92,7 @@ _systemctl () {
         local -A OPTS=(
                [STANDALONE]='--all -a --reverse --after --before --defaults --fail --ignore-dependencies --failed --force -f --full -l --global
                              --help -h --no-ask-password --no-block --no-legend --no-pager --no-reload --no-wall
-                             --quiet -q --privileged -P --system --user --version --runtime --recursive -r'
+                             --quiet -q --privileged -P --system --version --runtime --recursive -r'
                       [ARG]='--host -H --kill-who --property -p --signal -s --type -t --state --root'
         )
 
@@ -102,11 +102,7 @@ _systemctl () {
         LimitCPU= LimitFSIZE= LimitDATA= LimitSTACK= LimitCORE= LimitRSS= LimitNOFILE= LimitAS= LimitNPROC= LimitMEMLOCK=
         LimitLOCKS= LimitSIGPENDING= LimitMSGQUEUE= LimitNICE= LimitRTPRIO= LimitRTTIME='
 
-        if __contains_word "--user" ${COMP_WORDS[*]}; then
-            mode=--user
-        else
-            mode=--system
-        fi
+        mode=--system
 
         if __contains_word "$prev" ${OPTS[ARG]}; then
                 case $prev in
