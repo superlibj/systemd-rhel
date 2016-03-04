@@ -643,6 +643,7 @@ static int unit_create_cgroups(Unit *u, CGroupControllerMask mask) {
                         return log_oom();
 
                 r = hashmap_put(u->manager->cgroup_unit, path, u);
+                log_error("XXX add %s->%s (%d)", path, u->id, r);
                 if (r < 0) {
                         log_error(r == -EEXIST ? "cgroup %s exists already: %s" : "hashmap_put failed for %s: %s", path, strerror(-r));
                         return r;
@@ -845,6 +846,7 @@ void unit_destroy_cgroup_if_empty(Unit *u) {
                 return;
         }
 
+        log_error("XXX remove %s", u->cgroup_path);
         hashmap_remove(u->manager->cgroup_unit, u->cgroup_path);
 
         free(u->cgroup_path);
@@ -1029,8 +1031,10 @@ int manager_notify_cgroup_empty(Manager *m, const char *cgroup) {
         assert(cgroup);
 
         u = manager_get_unit_by_cgroup(m, cgroup);
+        log_error("XXX notify: %s  %s", cgroup, u ? u->id : "NULL");
         if (u) {
                 r = cg_is_empty_recursive(SYSTEMD_CGROUP_CONTROLLER, u->cgroup_path, true);
+                log_error("XXX notify: %s %d", u ? u->id : "NULL", r);
                 if (r > 0) {
                         if (UNIT_VTABLE(u)->notify_cgroup_empty)
                                 UNIT_VTABLE(u)->notify_cgroup_empty(u);

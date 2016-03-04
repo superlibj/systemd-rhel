@@ -81,6 +81,8 @@ static int signal_agent_released(sd_bus *bus, sd_bus_message *message, void *use
         assert(message);
         assert(m);
 
+        log_error("XXX got release message");
+
         r = sd_bus_message_read(message, "s", &cgroup);
         if (r < 0) {
                 bus_log_parse_error(r);
@@ -92,6 +94,7 @@ static int signal_agent_released(sd_bus *bus, sd_bus_message *message, void *use
         if (m->running_as == SYSTEMD_SYSTEM && m->system_bus) {
                 /* If we are running as system manager, forward the
                  * message to the system bus */
+                log_error("XXX forward Released message: %m");
 
                 r = sd_bus_send(m->system_bus, message, NULL);
                 if (r < 0)
