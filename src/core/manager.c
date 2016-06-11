@@ -847,6 +847,7 @@ static void unit_gc_sweep(Unit *u, unsigned gc_marker) {
 
         if (u->gc_marker == gc_marker + GC_OFFSET_GOOD ||
             u->gc_marker == gc_marker + GC_OFFSET_BAD ||
+            u->gc_marker == gc_marker + GC_OFFSET_UNSURE ||
             u->gc_marker == gc_marker + GC_OFFSET_IN_PATH)
                 return;
 
