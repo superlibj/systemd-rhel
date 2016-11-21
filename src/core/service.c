@@ -2999,8 +2999,10 @@ int service_set_socket_fd(Service *s, int fd, Socket *sock, bool selinux_context
         if (s->socket_fd >= 0)
                 return -EBUSY;
 
-        if (s->state != SERVICE_DEAD)
+        if (s->state != SERVICE_DEAD) {
+                log_unit_error(UNIT(s)->id, "Can't start %s, it is in %s state", UNIT(s)->id, service_state_to_string(s->state));
                 return -EAGAIN;
+        }
 
         if (getpeername_pretty(fd, &peer) >= 0) {
 
